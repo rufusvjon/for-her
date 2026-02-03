@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rufus ❤️ Keren</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Dancing+Script:wght@400;700&family=Outfit:wght@300;400;600&display=swap"
+          rel="stylesheet">
+    <style>
+        /* ─── RESET & ROOT ─── */
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+          --rose:#ff5c8a;--deep:#c9184a;--blush:#ffb3c6;
+          --gold:#f0c040;--sky:#0a1628;--skyMid:#152744;
+          --skyLight:#1e3a5f;--accent:#ff8fb3;--white:#fff;
+          --purple:#c77dff;
+        }
+        html{scroll-behavior:smooth}
+        body{font-family:'Outfit',sans-serif;background:var(--sky);color:#fff;overflow-x:hidden}
+
+        /* ─── SCROLLBAR ─── */
+        ::-webkit-scrollbar{width:5px}
+        ::-webkit-scrollbar-track{background:var(--sky)}
+        ::-webkit-scrollbar-thumb{background:linear-gradient(var(--rose),var(--purple));border-radius:3px}
+
+        /* ─── NOISE ─── */
+        .noise{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.04;
+          background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+          background-size:200px}
+
+        /* ─── HEART RAIN ─── */
+        .heart-rain{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden}
+        .heart-rain .h{position:absolute;opacity:0;animation:fallH 13s linear infinite}
+        @keyframes fallH{0%{transform:translateY(-40px) rotate(0deg);opacity:0}6%{opacity:.65}94%{opacity:.45}100%{transform:translateY(100vh) rotate(700deg);opacity:0}}
+
+        /* ─── MUSIC UNLOCK OVERLAY ─── */
+        .music-unlock{
+          position:fixed;inset:0;z-index:10000;
+          background:rgba(10,22,40,.95);backdrop-filter:blur(6px);
+          display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;
+          transition:opacity .5s;
+        }
+        .music-unlock.gone{opacity:0;pointer-events:none}
+        .music-unlock .mu-heart{font-size:60px;animation:hbig 1.3s ease-in-out infinite}
+        @keyframes hbig{0%,100%{transform:scale(1)}15%{transform:scale(1.2)}30%{transform:scale(1)}}
+        .music-unlock h2{font-family:'Playfair Display',serif;font-size:1.9rem;color:#fff;text-align:center;max-width:360px;line-height:1.4}
+        .music-unlock h2 span{color:var(--rose)}
+        .music-unlock button{
+          font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;
+          background:linear-gradient(135deg,var(--rose),var(--deep));color:#fff;border:none;
+          padding:.9rem 2.6rem;border-radius:50px;cursor:pointer;
+          box-shadow:0 10px 35px rgba(255,92,138,.45);transition:transform .25s,box-shadow .25s;
+        }
+        .music-unlock button:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 14px 45px rgba(255,92,138,.6)}
+        .music-unlock .mu-sub{color:rgba(255,255,255,.4);font-size:.82rem;letter-spacing:1px}
+
+        /* ─── SECTIONS ─── */
+        section{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+
+        /* ════════ HERO ════════ */
+        #hero{background:linear-gradient(180deg,var(--sky) 0%,#0f2035 60%,#162d4a 100%);flex-direction:column;text-align:center;padding:2rem}
+        .stars{position:absolute;inset:0;z-index:0}
+        .stars .star{position:absolute;background:#fff;border-radius:50%;animation:twink 3s ease-in-out infinite alternate}
+        @keyframes twink{0%{opacity:.15;transform:scale(.7)}100%{opacity:1;transform:scale(1.15)}}
+
+        .hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:.7rem}
+        .hero-content .tag{font-size:.82rem;letter-spacing:4px;text-transform:uppercase;color:var(--blush);border:1px solid rgba(255,92,138,.3);padding:.35rem 1.1rem;border-radius:50px;animation:fdDown .8s ease both}
+        @keyframes fdDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+        .hero-content h1{
+          font-family:'Playfair Display',serif;font-size:clamp(3.2rem,9vw,7.5rem);font-weight:900;
+          background:linear-gradient(135deg,#fff 25%,var(--rose) 55%,var(--gold) 100%);
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+          line-height:1;animation:fdDown .8s .15s ease both;
+        }
+        .hero-content .amp{
+          font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(2rem,5vw,3.8rem);
+          color:var(--rose);-webkit-text-fill-color:var(--rose);animation:fdDown .8s .3s ease both;
+        }
+        .hero-content .sub{font-size:1rem;color:rgba(255,255,255,.5);font-weight:300;letter-spacing:2px;animation:fdDown .8s .5s ease both;margin-top:.4rem}
+        .scroll-hint{margin-top:2.8rem;display:flex;flex-direction:column;align-items:center;gap:.35rem;color:rgba(255,255,255,.35);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;animation:fdDown .8s .85s ease both}
+        .scroll-hint .arr{width:18px;height:18px;border-right:2px solid var(--rose);border-bottom:2px solid var(--rose);transform:rotate(45deg);animation:bnc 2s infinite}
+        @keyframes bnc{0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translateY(7px)}}
+
+        /* ════════ DUBAI CANAL ════════ */
+        #dubai{min-height:200vh;background:linear-gradient(180deg,#0a1628,#0d1f3c 40%,#12293d 70%,#1a3550 100%);align-items:flex-start;padding-top:0}
+        .dubai-scene{position:sticky;top:0;width:100%;height:100vh;overflow:hidden;display:flex;align-items:flex-end;justify-content:center}
+
+        .water{position:absolute;bottom:0;left:0;width:100%;height:38%;background:linear-gradient(180deg,rgba(15,40,70,.9),rgba(10,25,50,1));overflow:hidden;z-index:1}
+        .water-shimmer{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0px,transparent 4px,rgba(255,255,255,.025) 4px,rgba(255,255,255,.025) 8px);animation:shim 4s linear infinite}
+        @keyframes shim{from{background-position:0 0}to{background-position:0 40px}}
+        .water-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:120%;height:60%;background:radial-gradient(ellipse at center,rgba(255,92,138,.14) 0%,rgba(200,100,255,.07) 30%,transparent 70%);animation:gwP 4s ease-in-out infinite alternate}
+        @keyframes gwP{from{opacity:.55;transform:translateX(-50%) scale(1)}to{opacity:1;transform:translateX(-50%) scale(1.06)}}
+
+        .skyline{position:absolute;bottom:38%;left:0;width:100%;height:55%;z-index:2;display:flex;align-items:flex-end;justify-content:center}
+        .skyline svg{width:100%;height:100%}
+
+        /* Ferris wheel */
+        .ferris-wrap{position:absolute;bottom:calc(38% - 28px);left:50%;transform:translateX(-50%);z-index:3;width:320px;height:320px}
+        .ferris-wrap svg{width:100%;height:100%}
+        .wheel-spin{transform-origin:160px 160px;animation:wSpin 38s linear infinite}
+        @keyframes wSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+        /* Couple silhouette */
+        .canal-couple{position:absolute;bottom:38%;left:50%;transform:translateX(-50%);z-index:4;animation:cFloat 6s ease-in-out infinite alternate}
+        @keyframes cFloat{from{transform:translateX(-50%) translateY(0)}to{transform:translateX(-50%) translateY(-5px)}}
+        .canal-couple svg{width:240px;height:150px}
+
+        .water-light{position:absolute;border-radius:50%;filter:blur(8px);z-index:2;animation:lwP 3s ease-in-out infinite alternate}
+        @keyframes lwP{from{opacity:.35;transform:scale(.9)}to{opacity:.9;transform:scale(1.1)}}
+
+        .dubai-label{position:absolute;bottom:42%;left:0;width:100%;text-align:center;z-index:5;pointer-events:none}
+        .dubai-label h2{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3.5vw,2.6rem);color:rgba(255,255,255,.85);text-shadow:0 0 50px rgba(255,92,138,.4);opacity:0;transition:opacity 1s}
+        .dubai-label h2.vis{opacity:1}
+
+        /* ════════ McCAFÉ ════════ */
+        #mcafe{min-height:100vh;background:linear-gradient(180deg,#0a1628 0%,#1a1210 40%,#2a1a14 60%,#1a1210 100%);flex-direction:column;padding:4rem 1.5rem;gap:0}
+        .cafe-scene{width:100%;max-width:960px;margin:0 auto;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
+
+        /* sign */
+        .cafe-sign{position:relative;margin-bottom:1.8rem}
+        .sign-chains{display:flex;justify-content:space-between;padding:0 1.8rem;position:absolute;top:-16px;left:0;width:100%;z-index:0}
+        .chain{width:9px;height:30px;background:linear-gradient(180deg,#b8a88a,#6b5e4e);border-radius:3px;box-shadow:0 2px 4px rgba(0,0,0,.4)}
+        .sign-board{
+          background:linear-gradient(150deg,#8B0000,#5C0000);border:4px solid var(--gold);border-radius:14px 14px 0 0;
+          padding:1rem 3.2rem;box-shadow:0 8px 30px rgba(0,0,0,.5),inset 0 2px 5px rgba(255,255,255,.08);position:relative;
+        }
+        .sign-board::before{content:'';position:absolute;inset:7px;border:2px solid rgba(255,215,0,.35);border-radius:9px 9px 0 0;pointer-events:none}
+        .sign-board h2{font-family:'Playfair Display',serif;font-size:2.9rem;font-weight:900;color:#fff;text-shadow:0 0 22px rgba(255,215,0,.55);letter-spacing:3px;position:relative;z-index:1}
+        .sign-board h2 span{color:var(--gold);text-shadow:0 0 28px rgba(240,192,64,.75)}
+        .sign-board .sign-sub{font-size:.82rem;color:rgba(255,255,255,.55);letter-spacing:3px;text-transform:uppercase;margin-top:.15rem;text-align:center;position:relative;z-index:1}
+
+        /* interior */
+        .cafe-interior{
+          background:linear-gradient(180deg,#2a1a14,#1f130e);border-radius:24px;width:100%;max-width:860px;
+          padding:2.5rem 2rem 3.5rem;box-shadow:0 30px 80px rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.06);
+          position:relative;overflow:hidden;
+        }
+        .cafe-table{position:absolute;bottom:0;left:0;width:100%;height:33%;background:linear-gradient(180deg,#3d2515,#2a1a10);border-top:3px solid #4a2e1a}
+        .cafe-table::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 38px,rgba(255,255,255,.018) 38px,rgba(255,255,255,.018) 39px)}
+
+        /* THE moment photo — big hero card */
+        .moment-card{
+          position:relative;z-index:2;width:100%;max-width:560px;margin:0 auto 2rem;
+          background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:22px;
+          padding:1.8rem;box-shadow:0 20px 60px rgba(0,0,0,.4);
+        }
+        .moment-card .mc-img{
+          width:100%;height:300px;border-radius:14px;overflow:hidden;position:relative;
+          background:linear-gradient(135deg,#1a0a20,#2d1040);display:flex;align-items:center;justify-content:center;
+        }
+        .moment-card .mc-img .mc-shimmer{position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.06) 50%,transparent 70%);animation:mcSh 3s ease infinite}
+        @keyframes mcSh{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+        .moment-card .mc-img img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
+        .moment-card .mc-img .placeholder-emoji{font-size:5rem;position:relative;z-index:1}
+        .moment-card .mc-caption{margin-top:1.2rem;text-align:center}
+        .moment-card .mc-caption h3{font-family:'Dancing Script',cursive;font-size:1.7rem;color:var(--rose)}
+        .moment-card .mc-caption p{color:rgba(255,255,255,.5);font-size:.93rem;line-height:1.7;margin-top:.4rem;max-width:440px;margin-left:auto;margin-right:auto}
+        .moment-card .mc-caption .mc-tag{
+          display:inline-block;margin-top:.7rem;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;
+          color:var(--gold);border:1px solid rgba(240,192,64,.3);padding:.25rem .8rem;border-radius:20px;
+        }
+
+        /* coffee cups row */
+        .coffee-cups{position:relative;z-index:2;display:flex;justify-content:center;gap:2.8rem;align-items:flex-end;margin-top:.5rem}
+        .cup-wrap{text-align:center}
+        .cup-wrap p{color:rgba(255,255,255,.45);font-size:.82rem;margin-top:.5rem;letter-spacing:1px}
+        .cup-wrap svg{width:85px;height:125px}
+        .steam{animation:stRise 2s ease-in-out infinite}
+        .steam:nth-of-type(2){animation-delay:.4s}
+        .steam:nth-of-type(3){animation-delay:.85s}
+        @keyframes stRise{0%{opacity:0;transform:translateY(0) scaleX(1)}50%{opacity:.6}100%{opacity:0;transform:translateY(-18px) scaleX(1.35)}}
+
+        /* ════════ WINDOW WAVE SURPRISE ════════ */
+        #surprise{
+          min-height:100vh;
+          background:linear-gradient(180deg,#1a1210 0%,#0a1628 50%,#0d1f3c 100%);
+          flex-direction:column;padding:3rem 1.5rem;gap:0;
+        }
+        .surprise-wrap{width:100%;max-width:700px;margin:0 auto;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:1.5rem}
+        .surprise-header{text-align:center}
+        .surprise-header h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4.5vw,2.8rem);font-weight:900;color:#fff}
+        .surprise-header h2 span{color:var(--rose)}
+        .surprise-header p{color:rgba(255,255,255,.45);font-size:.95rem;margin-top:.5rem;line-height:1.6;max-width:480px;margin-left:auto;margin-right:auto}
+
+        /* window frame scene */
+        .window-scene{
+          width:100%;max-width:580px;position:relative;border-radius:20px;overflow:hidden;
+          box-shadow:0 25px 70px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.07);
+        }
+        /* night sky bg behind the window */
+        .window-bg{
+          background:linear-gradient(180deg,#0a1628 0%,#152744 60%,#1e3a5f 100%);
+          padding:2.5rem 2rem 2rem;position:relative;
+        }
+        /* window frame */
+        .window-frame{
+          width:100%;max-width:420px;margin:0 auto;position:relative;
+          border:8px solid #8B7355;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.5),inset 0 2px 6px rgba(255,255,255,.08);
+          background:#0a1628;overflow:hidden;
+        }
+        .window-cross{position:absolute;inset:0;z-index:3;pointer-events:none}
+        .window-cross::before{content:'';position:absolute;left:50%;top:0;width:5px;height:100%;background:rgba(139,115,85,.7);transform:translateX(-50%)}
+        .window-cross::after{content:'';position:absolute;top:50%;left:0;height:5px;width:100%;background:rgba(139,115,85,.7);transform:translateY(-50%)}
+        /* video / placeholder inside window */
+        .window-content{width:100%;aspect-ratio:4/3;position:relative;overflow:hidden;background:#0a0a12}
+        .window-content video{width:100%;height:100%;object-fit:cover;display:block}
+        .window-content .win-placeholder{
+          width:100%;height:100%;background:linear-gradient(135deg,#1a0a20,#0d1f3c);
+          display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;
+        }
+        .window-content .win-placeholder .wp-emoji{font-size:4rem;animation:waveAnim 1.5s ease-in-out infinite}
+        @keyframes waveAnim{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(12deg)}}
+        .window-content .win-placeholder p{color:rgba(255,255,255,.45);font-size:.88rem;letter-spacing:1px}
+        /* little stars around window */
+        .win-stars{position:absolute;inset:0;pointer-events:none;z-index:1}
+        .win-stars .ws{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;opacity:.5;animation:twink 2.5s ease-in-out infinite alternate}
+        /* bottom label */
+        .window-label{text-align:center;margin-top:1rem}
+        .window-label p{font-family:'Dancing Script',cursive;font-size:1.5rem;color:var(--rose)}
+        .window-label .time-badge{
+          display:inline-block;margin-top:.5rem;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;
+          color:var(--gold);border:1px solid rgba(240,192,64,.3);padding:.22rem .75rem;border-radius:20px;
+        }
+
+        /* ════════ BIG QUESTION ════════ */
+        #question{
+          min-height:100vh;background:linear-gradient(180deg,#0a1628,#12223d 50%,#0d1a2e 100%);
+          flex-direction:column;text-align:center;padding:2rem;gap:1.2rem;
+        }
+        .q-card{
+          background:rgba(255,255,255,.04);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);
+          border-radius:28px;padding:3.5rem 2.5rem;max-width:620px;width:100%;
+          box-shadow:0 30px 80px rgba(0,0,0,.4);position:relative;z-index:2;overflow:hidden;
+        }
+        .q-card::before{content:'';position:absolute;inset:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,92,138,.07) 0%,transparent 65%);animation:rot 24s linear infinite}
+        @keyframes rot{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        .q-card .big-heart{font-size:72px;animation:hb 1.4s ease-in-out infinite;position:relative;z-index:1}
+        @keyframes hb{0%,100%{transform:scale(1)}15%{transform:scale(1.18)}30%{transform:scale(1)}}
+        .q-card h1{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,4.8vw,3rem);font-weight:900;color:#fff;position:relative;z-index:1;line-height:1.2}
+        .q-card h1 .r{color:var(--rose)}
+        .q-card .q-sub{color:rgba(255,255,255,.5);font-size:1rem;line-height:1.7;position:relative;z-index:1;max-width:480px;margin:0 auto}
+        .q-card .again-badge{
+          display:inline-block;margin-top:1rem;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;
+          color:var(--gold);border:1px solid rgba(240,192,64,.35);padding:.22rem .8rem;border-radius:20px;
+          position:relative;z-index:1;
+        }
+
+        .btn-row{display:flex;gap:1.1rem;justify-content:center;align-items:center;position:relative;z-index:5;flex-wrap:wrap;min-height:72px}
+        .yes-btn{
+          font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;
+          background:linear-gradient(135deg,var(--rose),var(--deep));color:#fff;border:none;
+          padding:1rem 3rem;border-radius:50px;cursor:pointer;
+          box-shadow:0 12px 40px rgba(255,92,138,.4);transition:transform .3s,box-shadow .3s;
+          position:relative;z-index:6;letter-spacing:1px;
+        }
+        .yes-btn:hover{transform:translateY(-3px) scale(1.06);box-shadow:0 18px 50px rgba(255,92,138,.6)}
+        .no-btn{
+          font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;
+          background:rgba(255,255,255,.06);color:rgba(255,255,255,.55);
+          border:1px solid rgba(255,255,255,.14);padding:.7rem 1.8rem;border-radius:50px;
+          cursor:pointer;position:fixed;transition:all .12s ease;z-index:4;
+          user-select:none;-webkit-user-select:none;box-shadow:0 4px 15px rgba(0,0,0,.3);
+        }
+        .dare-text{color:rgba(255,255,255,.28);font-size:.8rem;font-style:italic;position:relative;z-index:2}
+
+        /* ════════ CELEBRATE ════════ */
+        #celebrate{min-height:100vh;background:linear-gradient(180deg,#0a1628,#1a0a20 50%,#0a1628 100%);flex-direction:column;text-align:center;padding:2rem;gap:1.2rem;display:none}
+        #celebrate.show{display:flex}
+        .cel-card{
+          background:rgba(255,255,255,.05);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.1);
+          border-radius:28px;padding:3rem 2.2rem;max-width:660px;width:100%;
+          box-shadow:0 30px 80px rgba(255,92,138,.12);position:relative;z-index:2;
+        }
+        .cel-card .cel-heart{font-size:68px;animation:hb 1.3s ease-in-out infinite}
+        .cel-card h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5.5vw,3.5rem);font-weight:900;background:linear-gradient(90deg,#fff 0%,var(--rose) 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15}
+        .cel-card .cel-names{font-family:'Dancing Script',cursive;font-size:2rem;color:var(--rose);margin:.8rem 0}
+
+        /* celebration video */
+        .cel-video-wrap{
+          width:100%;max-width:520px;margin:1.2rem auto;border-radius:18px;overflow:hidden;
+          box-shadow:0 18px 55px rgba(0,0,0,.5);border:2px solid rgba(255,92,138,.25);
+          background:#0a0a12;
+        }
+        .cel-video-wrap video{width:100%;display:block}
+        .cel-video-wrap .cel-vid-placeholder{
+          width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#1a0a20,#2d1040);
+          display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;
+        }
+        .cel-video-wrap .cel-vid-placeholder .cvp-emoji{font-size:4rem}
+        .cel-video-wrap .cel-vid-placeholder p{color:rgba(255,255,255,.4);font-size:.88rem;letter-spacing:1px}
+
+        .love-letter{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.6rem 1.8rem;margin:1rem 0;text-align:left}
+        .love-letter p{color:rgba(255,255,255,.55);line-height:1.85;font-size:.95rem}
+        .love-letter p+p{margin-top:.9rem}
+        .signature{font-family:'Dancing Script',cursive;font-size:1.75rem;color:var(--rose);text-align:right;margin-top:1rem}
+
+        /* ─── confetti / fireworks ─── */
+        .confetti-piece{position:fixed;z-index:9999;animation:confFall 4s linear forwards;pointer-events:none}
+        @keyframes confFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(900deg);opacity:0}}
+        .firework-dot{position:fixed;border-radius:50%;z-index:9999;animation:fwB 1.2s ease-out forwards;pointer-events:none}
+        @keyframes fwB{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(0)}}
+
+        /* ─── scroll reveal ─── */
+        .reveal{opacity:0;transform:translateY(38px);transition:opacity .85s ease,transform .85s ease}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+
+        /* ─── floating emojis ─── */
+        .flt{position:absolute;font-size:1.8rem;opacity:.12;animation:fltAn 7s ease-in-out infinite alternate;pointer-events:none;z-index:1}
+        @keyframes fltAn{from{transform:translateY(0) rotate(0deg)}to{transform:translateY(-28px) rotate(14deg)}}
+
+        /* ─── responsive ─── */
+        @media(max-width:600px){
+          .ferris-wrap{width:230px;height:230px}
+          .canal-couple svg{width:180px;height:115px}
+          .moment-card .mc-img{height:220px}
+          .photo-frame .frame-img{width:120px;height:145px}
+          .q-card,.cel-card{padding:2.2rem 1.3rem}
+          .cafe-interior{padding:2rem 1rem 3rem}
+          .coffee-cups{gap:1.5rem}
+        }
+    </style>
+</head>
+<body>
+<button id="muteBtn" style="
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:1000;
+    padding:0.5rem 1rem;
+    border:none;
+    border-radius:8px;
+    background:var(--rose);
+    color:#fff;
+    cursor:pointer;
+">🔊 Mute</button>
+
+
+<!-- music unlock screen -->
+<div class="music-unlock" id="musicUnlock">
+    <div class="mu-heart">💖</div>
+    <h2>Hey <span>Keren</span>… this one plays a little song for you 🎵</h2>
+    <button onclick="unlockMusic()">Tap to Play ♡</button>
+    <p class="mu-sub">with sound on 🔊</p>
+</div>
+
+<!-- background audio — src you fill in -->
+<audio id="bgMusic" loop>
+    <!-- REPLACE src with your song file path: -->
+    <source src="audio/song.mp3" type="audio/mpeg">
+</audio>
+
+<div class="heart-rain" id="heartRain"></div>
+<div class="noise"></div>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+    <div class="stars" id="stars"></div>
+    <div class="hero-content">
+        <div class="tag">Valentine's Day 2026</div>
+        <h1>Rufus</h1>
+        <div class="amp">&</div>
+        <h1>Keren</h1>
+        <p class="sub">a story written in the stars ✦</p>
+        <div class="scroll-hint"><span>scroll</span>
+            <div class="arr"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ DUBAI CANAL ═══ -->
+<section id="dubai">
+    <div class="dubai-scene">
+        <div class="stars" id="stars2"></div>
+
+        <!-- skyline -->
+        <div class="skyline">
+            <svg viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="bG" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#1e3a5f"/>
+                        <stop offset="100%" stop-color="#0d1f3c"/>
+                    </linearGradient>
+                </defs>
+                <rect x="50" y="120" width="18" height="280" fill="url(#bG)"/>
+                <rect x="90" y="80" width="14" height="320" fill="#162d4a"/>
+                <rect x="140" y="200" width="45" height="200" fill="url(#bG)"/>
+                <rect x="210" y="60" width="16" height="340" fill="#1a3550"/>
+                <rect x="250" y="140" width="30" height="260" fill="url(#bG)"/>
+                <rect x="310" y="170" width="50" height="230" fill="#162d4a"/>
+                <rect x="390" y="90" width="12" height="310" fill="#1e3a5f"/>
+                <rect x="420" y="150" width="60" height="250" fill="url(#bG)"/>
+                <rect x="520" y="30" width="18" height="370" fill="#1a3550"/>
+                <polygon points="529,0 520,30 538,30" fill="#1a3550"/>
+                <rect x="570" y="180" width="45" height="220" fill="url(#bG)"/>
+                <rect x="640" y="100" width="22" height="300" fill="#162d4a"/>
+                <rect x="690" y="160" width="55" height="240" fill="#1e3a5f"/>
+                <rect x="770" y="70" width="15" height="330" fill="url(#bG)"/>
+                <rect x="810" y="190" width="40" height="210" fill="#162d4a"/>
+                <rect x="880" y="120" width="50" height="280" fill="url(#bG)"/>
+                <rect x="950" y="60" width="14" height="340" fill="#1a3550"/>
+                <rect x="990" y="140" width="35" height="260" fill="#162d4a"/>
+                <rect x="1050" y="170" width="48" height="230" fill="url(#bG)"/>
+                <rect x="1120" y="90" width="18" height="310" fill="#1e3a5f"/>
+                <rect x="1160" y="200" width="42" height="200" fill="url(#bG)"/>
+                <rect x="1230" y="50" width="16" height="350" fill="#1a3550"/>
+                <polygon points="1238,20 1230,50 1246,50" fill="#1a3550"/>
+                <rect x="1280" y="130" width="55" height="270" fill="#162d4a"/>
+                <rect x="1360" y="180" width="40" height="220" fill="url(#bG)"/>
+                <rect x="1410" y="100" width="30" height="300" fill="#1a3550"/>
+                <!-- lit windows -->
+                <g fill="var(--gold)" opacity=".38">
+                    <rect x="55" y="140" width="3" height="3"/>
+                    <rect x="60" y="180" width="3" height="3"/>
+                    <rect x="55" y="220" width="3" height="3"/>
+                    <rect x="95" y="110" width="3" height="3"/>
+                    <rect x="95" y="190" width="3" height="3"/>
+                    <rect x="95" y="270" width="3" height="3"/>
+                    <rect x="215" y="90" width="3" height="3"/>
+                    <rect x="215" y="160" width="3" height="3"/>
+                    <rect x="215" y="240" width="3" height="3"/>
+                    <rect x="525" y="55" width="3" height="3"/>
+                    <rect x="525" y="130" width="3" height="3"/>
+                    <rect x="525" y="210" width="3" height="3"/>
+                    <rect x="525" y="290" width="3" height="3"/>
+                    <rect x="775" y="100" width="3" height="3"/>
+                    <rect x="775" y="190" width="3" height="3"/>
+                    <rect x="775" y="270" width="3" height="3"/>
+                    <rect x="955" y="90" width="3" height="3"/>
+                    <rect x="955" y="200" width="3" height="3"/>
+                    <rect x="955" y="280" width="3" height="3"/>
+                    <rect x="1235" y="80" width="3" height="3"/>
+                    <rect x="1235" y="170" width="3" height="3"/>
+                    <rect x="1235" y="260" width="3" height="3"/>
+                    <rect x="150" y="230" width="3" height="3"/>
+                    <rect x="330" y="210" width="3" height="3"/>
+                    <rect x="435" y="190" width="3" height="3"/>
+                    <rect x="590" y="220" width="3" height="3"/>
+                    <rect x="705" y="190" width="3" height="3"/>
+                    <rect x="825" y="220" width="3" height="3"/>
+                    <rect x="1000" y="180" width="3" height="3"/>
+                    <rect x="1070" y="210" width="3" height="3"/>
+                    <rect x="1180" y="240" width="3" height="3"/>
+                    <rect x="1300" y="170" width="3" height="3"/>
+                    <rect x="1375" y="220" width="3" height="3"/>
+                    <rect x="1415" y="140" width="3" height="3"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Ferris wheel -->
+        <div class="ferris-wrap">
+            <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="wG" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#ff5c8a"/>
+                        <stop offset="50%" stop-color="#f0c040"/>
+                        <stop offset="100%" stop-color="#c77dff"/>
+                    </linearGradient>
+                </defs>
+                <line x1="160" y1="320" x2="55" y2="320" stroke="#8a7a6a" stroke-width="5"/>
+                <line x1="160" y1="282" x2="55" y2="320" stroke="#8a7a6a" stroke-width="4"/>
+                <line x1="160" y1="282" x2="265" y2="320" stroke="#8a7a6a" stroke-width="4"/>
+                <line x1="160" y1="320" x2="265" y2="320" stroke="#8a7a6a" stroke-width="5"/>
+                <g class="wheel-spin">
+                    <circle cx="160" cy="160" r="122" fill="none" stroke="url(#wG)" stroke-width="3.5" opacity=".9"/>
+                    <line x1="160" y1="38" x2="160" y2="282" stroke="rgba(255,255,255,.3)" stroke-width="1.2"/>
+                    <line x1="38" y1="160" x2="282" y2="160" stroke="rgba(255,255,255,.3)" stroke-width="1.2"/>
+                    <line x1="74" y1="74" x2="246" y2="246" stroke="rgba(255,255,255,.3)" stroke-width="1.2"/>
+                    <line x1="246" y1="74" x2="74" y2="246" stroke="rgba(255,255,255,.3)" stroke-width="1.2"/>
+                    <circle cx="160" cy="160" r="60" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1.8"/>
+                    <circle cx="160" cy="160" r="9" fill="var(--gold)" opacity=".9"/>
+                    <circle cx="160" cy="160" r="4.5" fill="#fff"/>
+                    <!-- capsules -->
+                    <circle cx="160" cy="38" r="8" fill="rgba(255,92,138,.8)"/>
+                    <circle cx="160" cy="38" r="4" fill="rgba(255,255,255,.3)"/>
+                    <circle cx="246" cy="74" r="8" fill="rgba(240,192,64,.8)"/>
+                    <circle cx="246" cy="74" r="4" fill="rgba(255,255,255,.3)"/>
+                    <circle cx="282" cy="160" r="8" fill="rgba(199,125,255,.8)"/>
+                    <circle cx="282" cy="160" r="4" fill="rgba(255,255,255,.3)"/>
+                    <circle cx="246" cy="246" r="8" fill="rgba(255,92,138,.8)"/>
+                    <circle cx="246" cy="246" r="4" fill="rgba(255,255,255,.3)"/>
+                    <circle cx="160" cy="282" r="8" fill="rgba(240,192,64,.8)"/>
+                    <circle cx="160" cy="282" r="4" fill="rgba(255,255,255,.3)"/>
+                    <circle cx="74" cy="246" r="8" fill="rgba(199,125,255,.8)"/>
+                    <circle cx="74" cy="246" r="4" fill="rgba(255,255,255,.3)"/>
+                    <circle cx="38" cy="160" r="8" fill="rgba(255,92,138,.8)"/>
+                    <circle cx="38" cy="160" r="4" fill="rgba(255,255,255,.3)"/>
+                    <circle cx="74" cy="74" r="8" fill="rgba(240,192,64,.8)"/>
+                    <circle cx="74" cy="74" r="4" fill="rgba(255,255,255,.3)"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- couple silhouette -->
+        <div class="canal-couple">
+            <svg viewBox="0 0 240 150" xmlns="http://www.w3.org/2000/svg">
+                <!-- railing -->
+                <rect x="0" y="108" width="240" height="3" fill="rgba(255,255,255,.22)" rx="1"/>
+                <rect x="0" y="118" width="240" height="2" fill="rgba(255,255,255,.14)" rx="1"/>
+                <rect x="12" y="98" width="2" height="22" fill="rgba(255,255,255,.18)"/>
+                <rect x="55" y="98" width="2" height="22" fill="rgba(255,255,255,.18)"/>
+                <rect x="98" y="98" width="2" height="22" fill="rgba(255,255,255,.18)"/>
+                <rect x="141" y="98" width="2" height="22" fill="rgba(255,255,255,.18)"/>
+                <rect x="184" y="98" width="2" height="22" fill="rgba(255,255,255,.18)"/>
+                <rect x="227" y="98" width="2" height="22" fill="rgba(255,255,255,.18)"/>
+                <!-- guy -->
+                <circle cx="100" cy="48" r="12" fill="rgba(255,255,255,.85)"/>
+                <rect x="88" y="62" width="24" height="44" rx="10" fill="rgba(255,255,255,.75)"/>
+                <!-- arm around her -->
+                <rect x="110" y="64" width="26" height="9" rx="4" fill="rgba(255,255,255,.7)"
+                      style="transform-origin:110px 68px;transform:rotate(5deg)"/>
+                <rect x="88" y="106" width="9" height="22" rx="4" fill="rgba(255,255,255,.7)"/>
+                <rect x="103" y="106" width="9" height="22" rx="4" fill="rgba(255,255,255,.7)"/>
+                <!-- girl — leaning head on his shoulder -->
+                <circle cx="138" cy="52" r="10" fill="rgba(255,92,138,.9)"/>
+                <!-- head tilted onto shoulder -->
+                <ellipse cx="118" cy="56" rx="8" ry="7" fill="rgba(255,92,138,.85)"
+                         style="transform-origin:118px 56px;transform:rotate(-12deg)"/>
+                <!-- hair -->
+                <ellipse cx="138" cy="46" rx="13" ry="7" fill="rgba(255,60,100,.82)"/>
+                <rect x="126" y="42" width="4" height="16" rx="2" fill="rgba(255,60,100,.7)"/>
+                <rect x="148" y="40" width="4" height="18" rx="2" fill="rgba(255,60,100,.7)"/>
+                <!-- her body -->
+                <rect x="129" y="62" width="20" height="40" rx="8" fill="rgba(255,92,138,.8)"/>
+                <!-- her hand holding his — small detail -->
+                <circle cx="122" cy="80" r="4" fill="rgba(255,92,138,.75)"/>
+                <circle cx="113" cy="79" r="4" fill="rgba(255,255,255,.7)"/>
+                <!-- legs -->
+                <rect x="130" y="102" width="7" height="18" rx="3" fill="rgba(255,92,138,.7)"/>
+                <rect x="141" y="102" width="7" height="18" rx="3" fill="rgba(255,92,138,.7)"/>
+                <!-- tiny heart -->
+                <text x="107" y="46" font-size="11" fill="var(--rose)" opacity=".95">❤️</text>
+            </svg>
+        </div>
+
+        <!-- water lights -->
+        <div class="water-light"
+             style="width:38px;height:38px;left:14%;bottom:12%;background:rgba(255,92,138,.55)"></div>
+        <div class="water-light"
+             style="width:22px;height:22px;left:28%;bottom:18%;background:rgba(240,192,64,.45);animation-delay:.7s"></div>
+        <div class="water-light"
+             style="width:32px;height:32px;left:58%;bottom:10%;background:rgba(199,125,255,.45);animation-delay:1.1s"></div>
+        <div class="water-light"
+             style="width:18px;height:18px;left:74%;bottom:21%;background:rgba(255,92,138,.38);animation-delay:.35s"></div>
+        <div class="water-light"
+             style="width:28px;height:28px;left:84%;bottom:15%;background:rgba(240,192,64,.5);animation-delay:1.7s"></div>
+        <div class="water-light"
+             style="width:16px;height:16px;left:43%;bottom:23%;background:rgba(255,255,255,.28);animation-delay:2s"></div>
+
+        <div class="water">
+            <div class="water-shimmer"></div>
+            <div class="water-glow"></div>
+        </div>
+
+        <div class="dubai-label"><h2 id="dubaiLbl">🌙</h2></div>
+    </div>
+</section>
+
+<!-- ═══ McCAFÉ ═══ -->
+<section id="mcafe">
+    <div class="flt" style="top:6%;left:4%">☕</div>
+    <div class="flt" style="top:20%;right:6%;animation-delay:1.2s">💕</div>
+    <div class="flt" style="top:70%;left:5%;animation-delay:2s">🌹</div>
+    <div class="flt" style="top:55%;right:4%;animation-delay:.6s">✨</div>
+
+    <div class="cafe-scene">
+        <!-- sign -->
+        <div class="cafe-sign reveal">
+            <div class="sign-chains">
+                <div class="chain"></div>
+                <div class="chain"></div>
+            </div>
+            <div class="sign-board">
+                <h2><span>Mc</span>Café</h2>
+                <p class="sign-sub">☕ where love is brewed ☕</p>
+            </div>
+        </div>
+
+        <!-- interior -->
+        <div class="cafe-interior reveal" style="transition-delay:.12s">
+
+            <!-- THE MOMENT — big emotional card -->
+            <div class="moment-card">
+                <div class="mc-img">
+                    <div class="mc-shimmer"></div>
+                    <!-- REPLACE placeholder with your photo: <img src="mcafe-moment.jpg" alt="our moment"> -->
+                    <img src="images/mcafe.jpg" alt="Our McCafé moment">
+                </div>
+                <div class="mc-caption">
+                    <h3>A Moment that I confirmed</h3>
+                    <p>
+                        We were just sitting there… and suddenly you held my hand so tightly,
+                        like you never wanted to let go. Then you rested your head on my shoulder —
+                        and I swear, that was the happiest moment of my entire life. i know i have told you -
+                        several times, still it hits like yesterday!💛
+                    </p>
+                    <div class="mc-tag">☕ Our First Coffee Together</div>
+                </div>
+            </div>
+
+            <!-- coffee cups -->
+            <div class="coffee-cups">
+                <div class="cup-wrap">
+                    <svg viewBox="0 0 85 125" xmlns="http://www.w3.org/2000/svg">
+                        <path class="steam" d="M26,16 Q30,6 26,-2" fill="none" stroke="rgba(255,255,255,.38)"
+                              stroke-width="2" stroke-linecap="round"/>
+                        <path class="steam" d="M36,18 Q40,4 36,-6" fill="none" stroke="rgba(255,255,255,.32)"
+                              stroke-width="2" stroke-linecap="round"/>
+                        <path class="steam" d="M46,14 Q50,2 46,-7" fill="none" stroke="rgba(255,255,255,.28)"
+                              stroke-width="2" stroke-linecap="round"/>
+                        <path d="M13,28 L18,105 Q18,112 27,112 L57,112 Q66,112 66,105 L71,28 Z" fill="#fff"/>
+                        <path d="M13,28 L71,28 L71,39 L13,39 Z" fill="var(--rose)"/>
+                        <text x="34" y="36" font-family="Arial Black,sans-serif" font-size="10" fill="#fff"
+                              font-weight="900">Mc
+                        </text>
+                        <rect x="10" y="23" width="62" height="7" rx="3.5" fill="#2a2a2a"/>
+                        <path d="M71,50 Q86,50 86,65 Q86,80 71,80" fill="none" stroke="#bbb" stroke-width="4.5"
+                              stroke-linecap="round"/>
+                        <ellipse cx="42" cy="29" rx="16" ry="2.5" fill="#5c3317" opacity=".55"/>
+                        <text x="27" y="100" font-family="Dancing Script,cursive" font-size="13" fill="var(--rose)">
+                            Rufus
+                        </text>
+                    </svg>
+                    <p>☕ Rufus</p>
+                </div>
+                <div class="cup-wrap">
+                    <svg viewBox="0 0 85 125" xmlns="http://www.w3.org/2000/svg">
+                        <path class="steam" d="M26,16 Q30,6 26,-2" fill="none" stroke="rgba(255,255,255,.38)"
+                              stroke-width="2" stroke-linecap="round"/>
+                        <path class="steam" d="M36,18 Q40,4 36,-6" fill="none" stroke="rgba(255,255,255,.32)"
+                              stroke-width="2" stroke-linecap="round"/>
+                        <path class="steam" d="M46,14 Q50,2 46,-7" fill="none" stroke="rgba(255,255,255,.28)"
+                              stroke-width="2" stroke-linecap="round"/>
+                        <path d="M13,28 L18,105 Q18,112 27,112 L57,112 Q66,112 66,105 L71,28 Z" fill="#fff"/>
+                        <path d="M13,28 L71,28 L71,39 L13,39 Z" fill="var(--purple)"/>
+                        <text x="34" y="36" font-family="Arial Black,sans-serif" font-size="10" fill="#fff"
+                              font-weight="900">Mc
+                        </text>
+                        <rect x="10" y="23" width="62" height="7" rx="3.5" fill="#2a2a2a"/>
+                        <path d="M71,50 Q86,50 86,65 Q86,80 71,80" fill="none" stroke="#bbb" stroke-width="4.5"
+                              stroke-linecap="round"/>
+                        <ellipse cx="42" cy="29" rx="16" ry="2.5" fill="#5c3317" opacity=".55"/>
+                        <text x="25" y="100" font-family="Dancing Script,cursive" font-size="13" fill="var(--purple)">
+                            Keren
+                        </text>
+                    </svg>
+                    <p>☕ Keren</p>
+                </div>
+            </div>
+
+            <div class="cafe-table"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ WINDOW WAVE SURPRISE ═══ -->
+<section id="surprise">
+    <div class="surprise-wrap">
+        <div class="surprise-header reveal">
+            <h2>The Night I Showed Up <span>Outside Your Window</span> 🌙</h2>
+            <p>When we planned to meet up, I just thought how about i come straight to you? well the best decision ill
+                say again!. And when you saw me and waved from your window… that smile of yours? That was everything.
+                💫</p>
+        </div>
+
+        <div class="window-scene reveal" style="transition-delay:.18s">
+            <div class="window-bg">
+                <!-- little stars -->
+                <div class="win-stars">
+                    <div class="ws" style="top:8%;left:12%;animation-delay:.2s"></div>
+                    <div class="ws" style="top:15%;left:72%;animation-delay:.8s"></div>
+                    <div class="ws" style="top:5%;left:45%;animation-delay:1.4s"></div>
+                    <div class="ws" style="top:22%;left:88%;animation-delay:.5s"></div>
+                    <div class="ws" style="top:10%;left:30%;animation-delay:1.8s"></div>
+                    <div class="ws" style="top:28%;left:55%;animation-delay:.3s"></div>
+                    <div class="ws" style="top:3%;left:60%;animation-delay:2.1s"></div>
+                </div>
+
+                <!-- window frame -->
+                <div class="window-frame">
+                    <div class="window-cross"></div>
+                    <div class="window-content">
+                        <video autoplay muted loop playsinline>
+                            <source src="videos/window-wave.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+
+            <div class="window-label">
+                <p>There she is… waving at me 🥺💕</p>
+                <div class="time-badge">What can i say it was kinda cuteeee :) seeing you shocked</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ THE BIG QUESTION ═══ -->
+<section id="question">
+    <div class="q-card reveal">
+        <div class="big-heart">💖</div>
+        <h1>So… <span class="r">Keren</span> 🌹</h1>
+        <p class="q-sub">
+            After that first coffee where you held my hand… every meetup we had… the long ride from rak to sharjah… the
+            night I showed up outside your window…
+            after every single moment that made my heart go crazy…
+        </p>
+        <h1 style="margin-top:1rem">Will You Be My Valentine… <span class="r">again?</span></h1>
+        <div class="again-badge">✦ Round Two ✦ because once wasn't enough</div>
+        <p class="q-sub" style="margin-top:.6rem;font-size:.88rem;color:rgba(255,255,255,.3)">
+            (yes… I know you said yes at 1:51 am on 3rd Feb… but I'm asking again 😏)
+        </p>
+        <div class="btn-row" id="btnRow">
+            <button class="yes-btn" onclick="celebrateYes()">YES… AGAIN!!! 💖</button>
+            <button class="no-btn" id="noBtn">No</button>
+        </div>
+        <p class="dare-text">(go ahead… try clicking "No" 😈)</p>
+    </div>
+</section>
+
+<!-- ═══ CELEBRATION ═══ -->
+<section id="celebrate">
+    <div class="cel-card">
+        <div class="cel-heart">💖</div>
+        <h1>She Said YES… Again!!</h1>
+        <div class="cel-names">Rufus ❤️ Keren — Always</div>
+
+        <!-- celebration video -->
+        <div class="cel-video-wrap">
+            <div class="cel-video-wrap">
+                <video autoplay controls loop playsinline>
+                    <source src="videos/together.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+        <div class="love-letter">
+            <p>Chakkuuu… you said yes the first time at 1:51 am on the 3rd of February — and I literally couldn't stop
+                smiling the night even in office i was istening to the voice. And now… you did it again.</p>
+            <p>From that first coffee where you held my hand and put your head on my shoulder… every single moment with
+                you is the best moment of my life.</p>
+            <p>This Valentine's Day is ours. Just us. 💛</p>
+            <div class="signature">Forever yours, Chakku :) ❤️</div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ JS ═══ -->
+<script>
+    // ── Stars ──
+    function makeStars(id,n){const c=document.getElementById(id);if(!c)return;for(let i=0;i<n;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.8+.8;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*2.5}s`;c.appendChild(s)}}
+    makeStars('stars',130);makeStars('stars2',85);
+
+    // ── Heart rain ──
+    (function(){const c=document.getElementById('heartRain');const e=['❤️','💕','💖','💗','💝','🌹'];for(let i=0;i<26;i++){const h=document.createElement('div');h.className='h';h.textContent=e[Math.floor(Math.random()*e.length)];const sz=11+Math.random()*17;h.style.cssText=`left:${Math.random()*100}%;font-size:${sz}px;animation-delay:${Math.random()*13}s;animation-duration:${9+Math.random()*7}s`;c.appendChild(h)}})();
+
+    // ── Music unlock overlay ──
+    function unlockMusic(){
+      const audio=document.getElementById('bgMusic');
+      audio.play().catch(()=>{});
+      document.getElementById('musicUnlock').classList.add('gone');
+    }
+
+    // ── Scroll reveal ──
+    const revs=document.querySelectorAll('.reveal');
+    function chkRev(){revs.forEach(el=>{if(el.getBoundingClientRect().top<window.innerHeight*.87)el.classList.add('visible')})}
+    window.addEventListener('scroll',chkRev);chkRev();
+
+    // ── Dubai label reveal on scroll ──
+    window.addEventListener('scroll',()=>{const lb=document.getElementById('dubaiLbl');if(lb&&document.getElementById('dubai').getBoundingClientRect().top<window.innerHeight*.6)lb.classList.add('vis')});
+
+    // ── NO BUTTON runs away ──
+    const noBtn=document.getElementById('noBtn');
+    let noCnt=0;
+    noBtn.style.left='calc(50% + 110px)';noBtn.style.top='calc(50% - 18px)';
+
+    function flee(){
+      const m=75;
+      noBtn.style.left=(m+Math.random()*(window.innerWidth-m*2-noBtn.offsetWidth))+'px';
+      noBtn.style.top=(m+Math.random()*(window.innerHeight-m*2-noBtn.offsetHeight))+'px';
+      noCnt++;
+      const sc=Math.max(.45,1-noCnt*.042);
+      noBtn.style.fontSize=(1*sc)+'rem';noBtn.style.padding=(.68*sc)+'rem '+(1.7*sc)+'rem';
+      noBtn.style.opacity=Math.max(.2,1-noCnt*.075);
+      if(noCnt>3)noBtn.textContent='No… 😢';
+      if(noCnt>6)noBtn.textContent='Please… 😭';
+      if(noCnt>10)noBtn.textContent='Just say YES! 💕';
+      if(noCnt>15)noBtn.textContent='…';
+      if(noCnt>19)noBtn.style.display='none';
+    }
+    noBtn.addEventListener('mouseover',flee);
+    noBtn.addEventListener('click',e=>{e.preventDefault();flee()});
+    document.addEventListener('mousemove',e=>{
+      if(!noBtn||noBtn.style.display==='none')return;
+      const r=noBtn.getBoundingClientRect();
+      if(Math.hypot(e.clientX-(r.left+r.width/2),e.clientY-(r.top+r.height/2))<88)flee();
+    });
+
+    // ── YES ──
+    function celebrateYes(){
+      document.getElementById('question').style.display='none';
+      const cel=document.getElementById('celebrate');cel.classList.add('show');
+      cel.scrollIntoView({behavior:'smooth'});
+      for(let i=0;i<280;i++)setTimeout(spawnConf,i*11);
+      [350,850,1350,1850,2300].forEach(d=>setTimeout(firework,d));
+    }
+    function spawnConf(){
+      const c=document.createElement('div');c.className='confetti-piece';
+      const cols=['#ff5c8a','#f0c040','#c77dff','#fff','#ff8fb3','#ffb3c6'];
+      const w=5+Math.random()*9,h=5+Math.random()*9;
+      c.style.cssText=`left:${Math.random()*100}%;top:-18px;width:${w}px;height:${h}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.5?'50%':'2px'}`;
+      document.body.appendChild(c);setTimeout(()=>c.remove(),4300);
+    }
+    function firework(){
+      const cols=['#ff5c8a','#c77dff','#f0c040','#fff','#ff8fb3'];
+      const cx=130+Math.random()*(innerWidth-260),cy=70+Math.random()*(innerHeight*.38);
+      for(let i=0;i<38;i++){
+        const d=document.createElement('div');d.className='firework-dot';
+        const a=(Math.PI*2/38)*i,v=55+Math.random()*65;
+        d.style.cssText=`left:${cx}px;top:${cy}px;background:${cols[Math.floor(Math.random()*cols.length)]};width:${3+Math.random()*4}px;height:${3+Math.random()*4}px`;
+        d.style.setProperty('--dx',Math.cos(a)*v+'px');d.style.setProperty('--dy',Math.sin(a)*v+'px');
+        document.body.appendChild(d);setTimeout(()=>d.remove(),1350);
+      }
+    }
+</script>
+<script>
+const bgMusic = document.getElementById('bgMusic');
+const muteBtn = document.getElementById('muteBtn');
+
+// Track current mute state
+let isMuted = false;
+
+muteBtn.addEventListener('click', () => {
+    isMuted = !isMuted;            // toggle
+    bgMusic.muted = isMuted;       // mute/unmute audio element
+    muteBtn.textContent = isMuted ? '🔇 Unmute' : '🔊 Mute';
+});
+
+// Optional: automatically mute background music when any video is playing
+document.querySelectorAll('video').forEach(video => {
+    video.addEventListener('play', () => {
+        bgMusic.muted = true;      // mute bg music when video plays
+    });
+    video.addEventListener('pause', () => {
+        if (!isMuted) bgMusic.muted = false; // restore if not manually muted
+    });
+});
+</script>
+
+</body>
+</html>
